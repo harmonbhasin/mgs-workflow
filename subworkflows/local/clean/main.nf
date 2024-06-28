@@ -22,7 +22,7 @@ workflow CLEAN {
     main:
         //adapt_ch = CUTADAPT(reads_ch, adapter_path)
         //trim_ch = TRIMMOMATIC(adapt_ch.reads, adapter_path)
-        fastp_ch = FASTP(reads_ch.reads, adapter_path)
+        fastp_ch = FASTP(reads_ch, adapter_path)
         qc_ch = QC(fastp_ch.reads, params.stage_label)
     emit:
         reads = fastp_ch.reads
