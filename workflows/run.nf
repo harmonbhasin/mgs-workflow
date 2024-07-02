@@ -59,13 +59,9 @@ workflow RUN {
     }
     // Process output
     qc_ch = RAW.out.qc.concat(CLEAN.out.qc, DEDUP.out.qc, RIBO_INITIAL.out.qc, RIBO_SECONDARY.out.qc)
-<<<<<<< HEAD
     //PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, TAXONOMY_PRE.out.bracken, TAXONOMY_POST.out.bracken, params.classify_dedup_subset)
     PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, params.classify_dedup_subset)
     //params_ch = SAVE_PARAMS()
-=======
-    PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, TAXONOMY_PRE.out.bracken, TAXONOMY_POST.out.bracken, params.classify_dedup_subset)
->>>>>>> upstream/master
     // Publish results
     params_str = JsonOutput.prettyPrint(JsonOutput.toJson(params))
     params_ch = Channel.of(params_str).collectFile(name: "run-params.json")
