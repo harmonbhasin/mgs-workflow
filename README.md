@@ -13,7 +13,7 @@ The run workflow then consists of five phases:
 1. A **preprocessing phase**, in which input files undergo adapter & quality trimming, deduplication, and ribodepletion.
 2. A **taxonomic profiling phase**, in which Kraken2 is used to assess the overall taxonomic composition of the input data and assess how it changes across different steps in the preprocessing phase.
 3. A **viral identification phase**, in which a custom multi-step pipeline based around Bowtie2 and Kraken2 is used to sensitively and specifically identify human-infecting virus (HV) reads in the input data for downstream analysis.
-4. An optional **BLAST validation phase**, in which putative HV reads from phase 3 are checked against nt to evaluate the sensitivity and specificity of the HV identification process.
+4. An optional **BLAST validation phase**, in which putative HV reads from phase 3 are checked against the NCBI nt database to evaluate the sensitivity and specificity of the HV identification process.
 5. A final **QC and output phase**, in which FASTQC, MultiQC and other tools are used to assess the quality of the data produced by the pipeline at various steps and produce summarized output data for downstream analysis and visualization.
 
 A slight simplification of the overall process is given by this mildly baffling diagram:
@@ -50,7 +50,7 @@ The run workflow begins by concatenating all libraries assigned to the same samp
 [^concat]: This is controlled by the library file specied in the config file; any libraries with the same entry in the `sample` column are concatenated. This is primarily useful in cases where the same library is sequenced multiple times, e.g. to reach some total target depth.
 [^subsample]: This is mainly useful for an initial run of the pipeline to confirm everything functions well for a given dataset and sample sheet; it's not recommended for analyses that are actually expected to yield meaningful results.
 
-Cleaned reads then undergo deduplication with [Clumpify](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/clumpify-guide/), a tool from the [BBTools suite](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/) that identifies and collapses read pairs that are identical modulo some specified error rate. (Importantly, this deduplication phase does not remote reverse-complement duplicates.[^rc]) The deduplicated reads then undergo ribodepletion with [BBDuk](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbduk-guide/), which searches for ribosomal k-mers based on a SILVA sequencing database and removes any reads that exhibit rRNA matches above some threshold. This is performed twice in series, once with relatively strict parameters for what sequences qualify as "ribosomal" (which thus removes relatively fewer reads) and again with more inclusive parameters (which thus result in more reads being removed). The output of the initial, more conservative ribodepletion step is passed to the viral identification phase, while the output of the latter, more aggressive step is passed to the taxonomic profiling phase[^ribo].
+Cleaned reads then undergo deduplication with [Clumpify](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/clumpify-guide/), a tool from the [BBTools suite](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/) that identifies and collapses read pairs that are identical modulo some specified error rate. (Importantly, this deduplication phase does not remove reverse-complement duplicates.[^rc]) The deduplicated reads then undergo ribodepletion with [BBDuk](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbduk-guide/), which searches for ribosomal k-mers based on a SILVA sequencing database and removes any reads that exhibit rRNA matches above some threshold. This is performed twice in series, once with relatively strict parameters for what sequences qualify as "ribosomal" (which thus removes relatively fewer reads) and again with more inclusive parameters (which thus result in more reads being removed). The output of the initial, more conservative ribodepletion step is passed to the viral identification phase, while the output of the latter, more aggressive step is passed to the taxonomic profiling phase[^ribo].
 
 [^rc]: Unfortunately, I'm not aware of any deduplication tool that (1) works well on paired-read data, (2) can detect and remove duplicates in the presence of sequencing errors, and (3) can handle reverse-complement duplicates. If you know of one, please do let me know!
 [^ribo]: The splitting of ribodepletion into these two phases arises from differences in the needs of the two downstream processes they feed into. For viral identification, we want to make sure we aren't losing any HV reads through spurious identification as ribosomal, so we use more conservative parameters. For taxonomic profiling, we're much less concerned about the status of individual reads and more concerned about accurately measuring ribosomal content, so a more aggressive approach is appropriate.
@@ -111,25 +111,27 @@ If the pipeline runs to completion, the following output files are expected.
 
 #### Index workflow
 
-1. `output/input/index_params.json`: JSON file giving all the parameters passed to the pipeline (useful for trying to reproduce someone else's results).
-2. `output/results/nt`: Directory containing extracted BLAST database files for BLASTing against nt.
-3. `output/results/bt2-hv-index`: Directory containing Bowtie2 index for human-infecting viral genomes.
-4. `output/results/bt2-human-index`: Directory containing Bowtie2 index for the human genome.
-5. `output/results/bt2-other-index`: Directory containing Bowtie2 index for other contaminant sequences.
-6. `output/results/bbm-human-index`: Directory containing BBMap index for the human genome.
-7. `output/results/bbm-other-index`: Directory containing BBMap index for other contaminant sequences.
-8. `output/results/kraken_db`: Directory containing Kraken2 reference database (by default, the most recent version of Standard).
-9. `output/results/human-viral-genomes-filtered.fasta.gz`: FASTA file containing human-viral genomes downloaded from viral Genbank (filtered to remove transgenic, contaminated, or erroneous sequences).
-10. `output/results/genomeid-to-taxid.json`: JSON mapping between HV taxids and NCBI genome IDs for the sequences in (8).
-11. `output/results/ribo-ref-concat.fasta.gz`: Reference database of ribosomal LSU and SSU sequences from SILVA.
-12. `output/results/taxonomy-nodes.dmp`: Taxonomy dump file from NCBI mapping between taxids and their parents in the NCBI taxonomy tree structure.
-13. `output/results/taxonomy-names.dmp`: Taxonomy dump file from NCBI mapping between taxids and taxon names.
-14. `output/results/human-virus-db.tsv.gz`: Database generated from (8), (9), (12) and (13) giving, for each human-viral taxon:
+1. `output/input/index-params.json`: JSON file giving all the parameters passed to the pipeline (useful for trying to reproduce someone else's results).
+2. `output/input/pipeline-version.txt`: Version of the pipeline with which index directory was created.
+3. `output/input/time.txt`: Start time of index workflow run.
+4. `output/results/nt`: Directory containing extracted BLAST database files for BLASTing against nt.
+5. `output/results/bt2-hv-index`: Directory containing Bowtie2 index for human-infecting viral genomes.
+6. `output/results/bt2-human-index`: Directory containing Bowtie2 index for the human genome.
+7. `output/results/bt2-other-index`: Directory containing Bowtie2 index for other contaminant sequences.
+8. `output/results/bbm-human-index`: Directory containing BBMap index for the human genome.
+9. `output/results/bbm-other-index`: Directory containing BBMap index for other contaminant sequences.
+10. `output/results/kraken_db`: Directory containing Kraken2 reference database (by default, the most recent version of Standard).
+11. `output/results/human-viral-genomes-filtered.fasta.gz`: FASTA file containing human-viral genomes downloaded from viral Genbank (filtered to remove transgenic, contaminated, or erroneous sequences).
+12. `output/results/genomeid-to-taxid.json`: JSON mapping between HV taxids and NCBI genome IDs for the sequences in (8).
+13. `output/results/ribo-ref-concat.fasta.gz`: Reference database of ribosomal LSU and SSU sequences from SILVA.
+14. `output/results/taxonomy-nodes.dmp`: Taxonomy dump file from NCBI mapping between taxids and their parents in the NCBI taxonomy tree structure.
+15. `output/results/taxonomy-names.dmp`: Taxonomy dump file from NCBI mapping between taxids and taxon names.
+16. `output/results/human-virus-db.tsv.gz`: Database generated from (8), (9), (12) and (13) giving, for each human-viral taxon:
     - The taxid (`taxid`)
     - The taxid of the parent taxon (`parent_taxid`)
     - The scientific name (`name`)
     - The taxonomic rank (`rank`)
-15. `output/results/total-virus-db.tsv.gz`: As (14), but for all viral taxa (including non-human-infecting ones).
+17. `output/results/total-virus-db.tsv.gz`: As (14), but for all viral taxa (including non-human-infecting ones).
 
 #### Run workflow
 
@@ -137,6 +139,10 @@ If the pipeline runs to completion, the following output files are expected.
     1. `adapters.fasta`: FASTA file of adapter sequences used for adapter screening.
     2. `params.json`: JSON file giving all the parameters passed to the pipeline.
     3. A CSV file giving sample metadata (filename specified by `params.sample_tab`).
+    4. `time.txt`: Start time of run workflow.
+    5. `pipeline-version.txt`: Version of pipeline used for run.
+    6. `pipeline-version-index.txt`: Version of pipeline used to generate index directory (`params.ref_dir`).
+    7. `index-params.json`: JSON file giving parameters used to generate index directory (`params.ref_dir`).
 2. `output/intermediates`: Intermediate files produced by key stages in the run workflow, saved for nonstandard downstream analysis.
     1. `reads/cleaned`: Directory containing paired FASTQ files for cleaned reads (i.e. the output of the preprocessing phase described above).
 3. `output/results`: Directory containing processed results files for standard downstream analysis.
@@ -214,7 +220,7 @@ aws_access_key_id = <ACCESS_KEY_ID>
 aws_secret_access_key = <SECRET_ACCESS_KEY>
 ```
 
-If you encounter AccessDenied errors after doing this, you may also need to export these keys as environment variables before running Nextflow:
+If you encounter `AccessDenied` errors after doing this, you may also need to export these keys as environment variables before running Nextflow:
 
 ```
 eval "$(aws configure export-credentials --format env)"
