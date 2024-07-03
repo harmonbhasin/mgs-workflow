@@ -27,7 +27,7 @@ nextflow.preview.output = true
 *****************/
 
 // Complete primary workflow
-workflow RUN {
+workflow TEST {
     // Start time
     start_time = new Date()
     start_time_str = start_time.format("YYYY-MM-dd HH:mm:ss z (Z)")
@@ -40,8 +40,8 @@ workflow RUN {
     // Preprocessing
     RAW(libraries_ch, params.raw_dir, params.n_reads_trunc)
     CLEAN(RAW.out.reads, params.adapters)
-    qc_ch = RAW.out.qc.concat(CLEAN.out.qc, DEDUP.out.qc, RIBO_INITIAL.out.qc, RIBO_SECONDARY.out.qc)
-//  //PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, TAXONOMY_PRE.out.bracken, TAXONOMY_POST.out.bracken, params.classify_dedup_subset)
+    qc_ch = CLEAN.out.qc
+
     PROCESS_OUTPUT(qc_ch)
     //params_ch = SAVE_PARAMS()
     // Publish results
