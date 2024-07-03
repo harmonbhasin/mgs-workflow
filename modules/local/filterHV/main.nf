@@ -1,7 +1,7 @@
 // Filter HV reads by alignment score
 process FILTER_HV {
     label "tidyverse"
-    label "single"
+    label "max"
     input:
         path(hv_hits)
         val(score_threshold)

@@ -1,7 +1,7 @@
 // Extract table of clade counts from HV reads
 process COUNT_HV_CLADES {
     label "R"
-    label "large"
+    label "max"
     input:
         path(hv_hits_tsv)
         path(viral_taxa)

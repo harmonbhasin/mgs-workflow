@@ -1,7 +1,7 @@
 // Extract FASTA from HV sequence TSV
 process MAKE_HV_FASTA {
     label "tidyverse"
-    label "single"
+    label "max"
     input:
         path(hv_hits_collapsed)
     output:

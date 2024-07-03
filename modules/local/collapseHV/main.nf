@@ -1,7 +1,7 @@
 // Collapse separate read pair entries in HV DB
 process COLLAPSE_HV {
     label "tidyverse"
-    label "single"
+    label "max"
     input:
         path(hv_hits_filtered)
     output:
