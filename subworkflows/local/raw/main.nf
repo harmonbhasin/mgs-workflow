@@ -17,7 +17,7 @@ include { CONCAT_GZIPPED } from "../../../modules/local/concatGzippedSE"
 workflow RAW {
     take:
         libraries_ch
-        raw_dir_pat
+        raw_dir_path
         n_reads_trunc
     main:
         concat_ch = CONCAT_GZIPPED(raw_dir_path, libraries_ch)
