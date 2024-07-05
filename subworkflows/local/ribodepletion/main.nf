@@ -3,7 +3,7 @@
 ***************************/
 
 include { QC } from "../../../subworkflows/local/qc" addParams(fastqc_cpus: params.fastqc_cpus, fastqc_mem: params.fastqc_mem)
-include { BBDUK } from "../../../modules/local/bbduk" addParams(suffix: params.bbduk_suffix)
+include { BBDUK } from "../../../modules/local/bbdukSE" addParams(suffix: params.bbduk_suffix)
 
 /***********
 | WORKFLOW |
