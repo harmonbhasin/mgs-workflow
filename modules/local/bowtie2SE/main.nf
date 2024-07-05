@@ -15,9 +15,9 @@ process BOWTIE2 {
         in1=!{reads[0]}
         idx="!{index_dir}/bt2_index"
         sam="!{sample}_!{params.suffix}_bowtie2_mapped.sam"
-        alc="!{sample}_!{params.suffix}_bowtie2_conc.fastq.gz"
-        unc="!{sample}_!{params.suffix}_bowtie2_unconc.fastq.gz"
-        io="-1 ${in1} -x ${idx} -S ${sam} --al-conc-gz ${alc} --un-conc-gz ${unc}"
+        al="!{sample}_!{params.suffix}_bowtie2_conc.fastq.gz"
+        un="!{sample}_!{params.suffix}_bowtie2_unconc.fastq.gz"
+        io="-U ${in1} -x ${idx} -S ${sam} --al-gz ${al} --un-gz ${un}"
         par="--threads !{task.cpus} --local --very-sensitive-local !{par_string}"
         bowtie2 ${par} ${io}
         '''
