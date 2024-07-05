@@ -58,7 +58,8 @@ workflow SINGLE {
         BLAST_HV(HV.out.fasta, blast_nt_path, params.blast_hv_fraction)
     }
     // Process output
-    qc_ch = RAW.out.qc.concat(CLEAN.out.qc, DEDUP.out.qc, RIBO_INITIAL.out.qc, RIBO_SECONDARY.out.qc)
+//    qc_ch = RAW.out.qc.concat(CLEAN.out.qc, DEDUP.out.qc, RIBO_INITIAL.out.qc, RIBO_SECONDARY.out.qc)
+    qc_ch = CLEAN.out.qc.concat(DEDUP.out.qc, RIBO_INITIAL.out.qc, RIBO_SECONDARY.out.qc)
     //PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, TAXONOMY_PRE.out.bracken, TAXONOMY_POST.out.bracken, params.classify_dedup_subset)
     PROCESS_OUTPUT(qc_ch, TAXONOMY_FULL.out.bracken, params.classify_dedup_subset)
     //params_ch = SAVE_PARAMS()
