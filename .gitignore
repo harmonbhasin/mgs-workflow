@@ -6,3 +6,4 @@ test/work
 test/output
 test/.nextflow*
 *.Rhistory
+.DS_Store
