@@ -7,13 +7,13 @@ include { EXTRACT_TARBALL as EXTRACT_BT2_INDEX_HUMAN } from "../../../modules/lo
 include { EXTRACT_TARBALL as EXTRACT_BT2_INDEX_OTHER } from "../../../modules/local/extractTarball"
 include { EXTRACT_TARBALL as EXTRACT_BBM_INDEX_HUMAN } from "../../../modules/local/extractTarball"
 include { EXTRACT_TARBALL as EXTRACT_BBM_INDEX_OTHER } from "../../../modules/local/extractTarball"
-include { BOWTIE2 as BOWTIE2_HV } from "../../../modules/local/bowtie2" addParams(suffix: "hv")
-include { BOWTIE2 as BOWTIE2_HUMAN } from "../../../modules/local/bowtie2" addParams(suffix: "human")
-include { BOWTIE2 as BOWTIE2_OTHER } from "../../../modules/local/bowtie2" addParams(suffix: "other")
+include { BOWTIE2 as BOWTIE2_HV } from "../../../modules/local/bowtie2SE" addParams(suffix: "hv")
+include { BOWTIE2 as BOWTIE2_HUMAN } from "../../../modules/local/bowtie2SE" addParams(suffix: "human")
+include { BOWTIE2 as BOWTIE2_OTHER } from "../../../modules/local/bowtie2SE" addParams(suffix: "other")
 include { PROCESS_BOWTIE2_SAM_PAIRED } from "../../../modules/local/processBowtie2Sam"
 include { EXTRACT_UNCONC_READ_IDS } from "../../../modules/local/extractUnconcReadIDs"
-include { EXTRACT_UNCONC_READS } from "../../../modules/local/extractUnconcReads"
-include { COMBINE_MAPPED_BOWTIE2_READS } from "../../../modules/local/combineMappedBowtie2Reads"
+include { EXTRACT_UNCONC_READS } from "../../../modules/local/extractUnconcReadsSE"
+include { COMBINE_MAPPED_BOWTIE2_READS } from "../../../modules/local/combineMappedBowtie2ReadsSE"
 include { BBMAP as BBMAP_HUMAN } from "../../../modules/local/bbmap" addParams(suffix: "human")
 include { BBMAP as BBMAP_OTHER } from "../../../modules/local/bbmap" addParams(suffix: "other")
 include { TAXONOMY } from "../../../subworkflows/local/taxonomy" addParams(dedup_rc: true, classification_level: "F", read_fraction: 1)
