@@ -27,7 +27,7 @@ nextflow.preview.output = true
 *****************/
 
 // Complete primary workflow
-workflow RUN {
+workflow SINGLE {
     // Start time
     start_time = new Date()
     start_time_str = start_time.format("YYYY-MM-dd HH:mm:ss z (Z)")
