@@ -9,7 +9,7 @@
 include { QC } from "../../../subworkflows/local/qc" addParams(fastqc_cpus: params.fastqc_cpus, fastqc_mem: params.fastqc_mem)
 //include { CUTADAPT } from "../../../modules/local/cutadapt"
 //include { TRIMMOMATIC } from "../../../modules/local/trimmomatic"
-include { FASTP } from "../../../modules/local/fastp"
+include { FASTP } from "../../../modules/local/fastpSE"
 
 /***********
 | WORKFLOW |

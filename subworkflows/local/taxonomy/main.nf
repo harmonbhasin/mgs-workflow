@@ -6,7 +6,7 @@
 | MODULES AND SUBWORKFLOWS |
 ***************************/
 
-include { SUBSET_READS_PAIRED } from "../../../modules/local/subsetReads" addParams(suffix: "fastq")
+include { SUBSET_READS_PAIRED_MERGED } from "../../../modules/local/subsetReads" addParams(suffix: "fastq")
 include { BBMERGE } from "../../../modules/local/bbmerge"
 include { JOIN_FASTQ } from "../../../modules/local/joinFastq"
 include { CLUMPIFY_SINGLE } from "../../../modules/local/clumpify"
@@ -30,11 +30,12 @@ workflow TAXONOMY {
         if ( params.read_fraction == 1 ){
             subset_ch = reads_ch
         } else {
-            subset_ch = SUBSET_READS_PAIRED(reads_ch, params.read_fraction)
+            subset_ch = SUBSET_READS_PAIRED_MERGED(reads_ch, params.read_fraction)
         }
         // Prepare reads
-        merged_ch = BBMERGE(subset_ch)
-        joined_ch = JOIN_FASTQ(merged_ch.reads)
+//        merged_ch = BBMERGE(subset_ch)
+//        joined_ch = JOIN_FASTQ(merged_ch.reads)
+        joined_ch = subset_ch
         // Deduplicate reads (if applicable)
         if ( params.dedup_rc ){
             dedup_ch = CLUMPIFY_SINGLE(joined_ch)

@@ -10,6 +10,7 @@ include { SUMMARIZE_MULTIQC_SINGLE } from "../../../modules/local/summarizeMulti
 | WORKFLOW |
 ***********/
 
+//@TODO: See if I need to fix the QC
 workflow QC {
     take:
         reads
