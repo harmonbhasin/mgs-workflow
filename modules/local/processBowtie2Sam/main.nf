@@ -12,6 +12,6 @@ process PROCESS_BOWTIE2_SAM_PAIRED {
         in=!{sam}
         out=!{sample}_bowtie2_sam_processed.tsv
         map=!{genomeid_taxid_map_path}
-        process_bowtie2_sam.py ${in} ${map} ${out}
+        process_bowtie2_samSE.py ${in} ${map} ${out} -u
         '''
 }
