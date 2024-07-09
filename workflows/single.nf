@@ -51,7 +51,7 @@ workflow SINGLE {
     // TAXONOMY_PRE(CLEAN.out.reads, kraken_db_path)
     // TAXONOMY_POST(DEDUP.out.reads, kraken_db_path)
     // Extract and count human-viral reads
-    HV(RIBO_INITIAL.out.reads, params.ref_dir, kraken_db_path, params.bt2_score_threshold)
+    //HV(RIBO_INITIAL.out.reads, params.ref_dir, kraken_db_path, params.bt2_score_threshold)
     // BLAST validation on human-viral reads (optional)
     if ( params.blast_hv_fraction > 0 ) {
         blast_nt_path = "${params.ref_dir}/results/nt"
@@ -85,8 +85,8 @@ workflow SINGLE {
         PROCESS_OUTPUT.out.qbase >> "results/qc"
         PROCESS_OUTPUT.out.qseqs >> "results/qc"
         // Final results
-        HV.out.tsv >> "results/hv"
-        HV.out.counts >> "results/hv"
+        //HV.out.tsv >> "results/hv"
+        //HV.out.counts >> "results/hv"
         PROCESS_OUTPUT.out.composition_full >> "results/taxonomy_final"
         // PROCESS_OUTPUT.out.composition_pre >> "results/taxonomy_pre_dedup"
         // PROCESS_OUTPUT.out.composition_post >> "results/taxonomy_post_dedup"
