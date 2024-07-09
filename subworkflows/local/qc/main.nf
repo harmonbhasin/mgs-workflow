@@ -4,7 +4,7 @@
 
 include { FASTQC } from "../../../modules/local/fastqc" addParams(cpus: "${params.fastqc_cpus}", mem: "${params.fastqc_mem}")
 include { MULTIQC } from "../../../modules/local/multiqc"
-include { SUMMARIZE_MULTIQC_SINGLE } from "../../../modules/local/summarizeMultiqcSingleSE"
+include { SUMMARIZE_MULTIQC_SINGLE } from "../../../modules/local/summarizeMultiqcSingle"
 
 /***********
 | WORKFLOW |
