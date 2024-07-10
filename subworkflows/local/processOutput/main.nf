@@ -6,7 +6,7 @@ include { MERGE_TSVS as MERGE_MULTIQC_BASIC } from "../../../modules/local/merge
 include { MERGE_TSVS as MERGE_MULTIQC_ADAPT } from "../../../modules/local/mergeTsvs" addParams(name: "qc_adapter_stats")
 include { MERGE_TSVS as MERGE_MULTIQC_QBASE } from "../../../modules/local/mergeTsvs" addParams(name: "qc_quality_base_stats")
 include { MERGE_TSVS as MERGE_MULTIQC_QSEQS } from "../../../modules/local/mergeTsvs" addParams(name: "qc_quality_sequence_stats")
-include { SUMMARIZE_COMPOSITION as SUMMARIZE_COMPOSITION_FULL } from "../../../modules/local/summarizeComposition"
+include { SUMMARIZE_COMPOSITION as SUMMARIZE_COMPOSITION_FULL } from "../../../modules/local/summarizeCompositionSE"
 // include { SUMMARIZE_COMPOSITION as SUMMARIZE_COMPOSITION_PRE } from "../../../modules/local/summarizeComposition"
 // include { SUMMARIZE_COMPOSITION as SUMMARIZE_COMPOSITION_POST } from "../../../modules/local/summarizeComposition"
 
